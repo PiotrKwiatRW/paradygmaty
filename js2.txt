@@ -1,0 +1,214 @@
+zad.1 (tworzenie prostego obiektu)
+const currentUser = {
+    name: "Jakub",
+    surname: "Kowalski",
+    email: "jkowalski@onet.pl",
+    isActive: false,
+    www: "jk.com",
+    userType : 'admin',
+    show(){
+        console.log(this.name + ", " + this.surname + ", " + this.email + ", " + this.isActive + ", " + this.www + ", " + this.userType);
+    },
+    setActive(statement){
+        this.isActive = statement;
+    },
+};
+currentUser.setActive(true);
+currentUser.show();
+
+
+zad.2
+class Book {
+    constructor(){
+        this.users = [];
+    }
+    addUser(name, age, phone){
+        const user = {
+            name: name,
+            age: age,
+            phone: phone,
+        }
+        this.users.push(user);
+    }
+    showUsers(){
+        console.log("Wszyscy użytkownicy w książce: ");
+        for(let user of this.users){
+            console.log(user.name + ", " + user.age + ", " + user.phone);
+        }
+    }
+    findByName(name){
+        let znaleziono = false;
+        for(let user of this.users){
+            if(name === user.name){
+                console.log('Znaleziono');
+                znaleziono = true;
+            }
+        }
+        if(znaleziono === false){
+            console.log(znaleziono);
+        }
+    }
+    findByPhone(phone){
+        let znaleziono = false;
+        for(let user of this.users){
+            if(phone === user.phone){
+                console.log('Znaleziono');
+                znaleziono = true;
+            }
+        }
+        if(znaleziono === false){
+            console.log(znaleziono);
+        }
+    }
+    getCount(){
+        console.log(this.users.length);
+    }
+}
+
+const book = new Book();
+
+console.log("Test 1: Dodanie użytkowników");
+book.addUser("Jan Kowalski", 30, "123456789");
+book.addUser("Anna Nowak", 25, "987654321");
+book.addUser("Marek Wiśniewski", 40, "555555555");
+
+book.showUsers();  
+
+console.log("\nTest 2: Liczba użytkowników");
+book.getCount(); 
+
+console.log("\nTest 3: Wyszukiwanie po imieniu");
+book.findByName("Anna Nowak"); 
+
+console.log("\nTest 4: Wyszukiwanie po imieniu (brak użytkownika)");
+book.findByName("Krzysztof Zawisza");  
+
+console.log("\nTest 5: Wyszukiwanie po telefonie");
+book.findByPhone("123456789"); 
+
+console.log("\nTest 6: Wyszukiwanie po telefonie (brak użytkownika)");
+book.findByPhone("000000000"); 
+book.getCount();
+
+
+
+PRZYKLAD NA FOR … IN:
+const person = {
+    name: 'Jan',
+    age: 30,
+    phone: '123456789'
+};
+
+for (let key in person) {
+    console.log(key, person[key]);
+}
+
+// Wynik:
+// name Jan
+// age 30
+// phone 123456789
+
+
+
+PRZYKLAD NA FOR … OF:
+const arr = ['a', 'b', 'c'];
+
+for (let value of arr) {
+    console.log(value);
+}
+
+// Wynik:
+// a
+// b
+// c
+
+
+
+zad.3
+const text = {
+    check(txt, word){
+        if(txt.includes(word)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    },
+    getCount(txt){
+        let counter = 0;
+        for(let i = 0; i<txt.length; i++){
+            counter++;
+        }
+        return counter;
+    },
+    getWordsCount(txt){
+        let arr = txt.split(" ");
+        return arr.length;
+    },
+    setCapitalize(txt){
+        let arr = txt.split(" ");
+        for(let i = 0; i<arr.length; i++){
+            arr[i] = arr[i].charAt(0).toUpperCase() + arr[i].slice(1).toLowerCase();
+        }
+        let res = arr.join(" ");
+        return res;
+    },
+    setMix(txt){
+        let res = "";
+        for(let i = 0; i<txt.length; i++){
+            if(i%2 === 1){
+                res += txt[i].toUpperCase();
+            }
+            else{
+                res += txt[i].toLowerCase();
+            }
+        }
+        return res;
+    },
+    generateRandom(lng){
+        const znaki = 'abcdefghijklmnopqrstwxyz';
+        let res = "";
+        for(let i = 0; i<lng; i++){
+            let randomIndex = Math.floor(Math.random() * znaki.length);
+            res+=znaki[randomIndex];
+        }
+        return res;
+    }
+    
+}
+console.log(text.check("Ala ma kota", "kosa"));
+console.log(text.getCount("Ala ma kota"));
+console.log(text.getWordsCount("Ala ma kota"));
+console.log(text.setCapitalize("ala ma kota"));
+console.log(text.setMix("ala ma kota"));
+console.log(text.generateRandom(10));
+
+
+zad.4 (rozbudowywanie typów wbudowanych)
+String.prototype.mirror = function(){
+    let res = "";
+    for(let i = this.length-1; i>=0; i--){
+        res+=this[i];
+    }
+    return res;
+}
+let str = "Hello World";
+console.log(str.mirror());
+
+Zad.5
+function createCounter(){
+    let counter = 0;
+    return function(){
+        counter+=1;
+        return counter;
+    }
+}
+
+counter1 = createCounter();
+console.log(counter1());
+console.log(counter1());
+console.log(counter1());
+counter2 = createCounter();
+console.log(counter2());
+console.log(counter2());
+console.log(counter2());
