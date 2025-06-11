@@ -1,0 +1,45 @@
+zad.4
+silnia :: Integer -> Integer
+silnia 0 = 1
+silnia n = silnia(n-1) * n
+
+main :: IO()
+main = print(silnia(5))
+
+
+
+zad.5
+fibonacci :: Integer -> Integer
+fibonacci 0 = 0
+fibonacci 1 = 1
+fibonacci n = fibonacci (n - 1) + fibonacci (n - 2)
+
+main :: IO()
+main = print(fibonacci(8))
+
+
+
+zad.6
+roznica :: (Ord a, Num a) => a->a->a->a
+roznica x y z = maximum[x, y, z] - minimum[x, y, z]
+
+main :: IO()
+main = print(roznica 7 1 4 )
+
+
+
+zad.7
+sumakwadratow :: Num a => a->a->a
+sumakwadratow x y = x^2 + y^2
+
+main :: IO()
+main = print(sumakwadratow 3 4)
+
+
+
+zad.8
+ostatnia :: Integer -> Integer
+ostatnia x = abs x `mod` 10
+
+main :: IO()
+main = print(ostatnia (-17))
