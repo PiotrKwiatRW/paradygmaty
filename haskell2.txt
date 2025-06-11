@@ -1,0 +1,187 @@
+zad.1
+main :: IO ()
+main = do
+  -- map kw [0..]
+  -- Tworzy nieskończoną listę wyników funkcji kw dla kolejnych liczb naturalnych: [kw 0, kw 1, kw 2, ...]
+  -- czyli [0*0, 1*1, 2*2, 3*3, ...] = [0,1,4,9,16,...]
+
+  -- takeWhile (<50) ...
+  -- Pobiera elementy z tej listy dopóki są mniejsze od 50.
+  -- Zatrzyma się, gdy napotka pierwszy element >= 50.
+
+  let x = takeWhile (<50) (map kw [0..])
+  -- Przykładowo, lista x będzie zawierać [0,1,4,9,16,25,36,49]
+
+  print(x)
+  -- Wyświetla powyższą listę na ekranie
+
+-- Definicja funkcji kw
+kw :: Integer -> Integer
+kw x = x * x
+-- kw oblicza kwadrat podanej liczby całkowitej
+
+
+b)
+main :: IO ()
+main = do
+  -- ([1..], 5) to krotka, gdzie pierwszy element to nieskończona lista liczb naturalnych, a drugi to 5
+
+  -- snd ([1..], 5)
+  -- Funkcja snd zwraca drugi element krotki, czyli tutaj wartość 5.
+  -- Nie ocenia całej nieskończonej listy [1..], bo leniwe obliczanie pozwala pobrać tylko potrzebny element.
+
+  let y = kw (snd ([1..], 5))
+  -- Obliczamy kwadrat wartości 5 (czyli 25)
+
+  print(y)
+  -- Wyświetla wynik (25) na ekranie
+
+-- Definicja funkcji kw
+kw :: Integer -> Integer
+kw x = x * x
+-- Funkcja obliczająca kwadrat liczby całkowitej
+
+
+
+zad.2
+-- Definicja typu drzewa binarnego parametryzowanego typem 'a'
+data Tree a = 
+    EmptyTree                    -- Pusty węzeł (liść bez wartości)
+  | Node a (Tree a) (Tree a)     -- Węzeł z wartością typu 'a' i dwoma poddrzewami (lewe i prawe)
+
+-- Przykład pustego drzewa dla typu Int
+emptyTree :: Tree Int 
+emptyTree = EmptyTree
+
+-- Przykład drzewa z jednym węzłem o wartości 5 i dwoma pustymi poddrzewami
+singleNode :: Tree Int 
+singleNode = Node 5 EmptyTree EmptyTree
+
+-- Przykład większego drzewa:
+-- Korzeń ma wartość 10
+-- Lewe poddrzewo to węzeł z wartością 5 i pustymi poddrzewami
+-- Prawe poddrzewo to węzeł z wartością 15, które ma lewe poddrzewo z wartością 12 i puste prawe poddrzewo
+exampleTree :: Tree Int
+exampleTree = Node 10 
+                  (Node 5 EmptyTree EmptyTree)
+                  (Node 15 (Node 12 EmptyTree EmptyTree) EmptyTree)
+
+-- Funkcja sumująca wartości wszystkich węzłów w drzewie
+sumTree :: Num a => Tree a -> a 
+sumTree EmptyTree = 0
+-- Jeśli węzeł istnieje (Node), sumujemy wartość tego węzła oraz rekurencyjnie sumujemy wartości w lewym i prawym poddrzewie
+sumTree (Node value left right) = value + sumTree left + sumTree right
+
+main :: IO ()
+main = do
+  -- Wywołanie funkcji sumTree na przykładzie exampleTree i wypisanie wyniku
+  -- W tym przypadku wynik to 10 + 5 + 15 + 12 = 42
+  print(sumTree exampleTree)
+
+
+
+
+zad.3
+myReverse :: [a] -> [a]
+myReverse [] = []                         -- Odwrócenie pustej listy to pusta lista
+myReverse (x:xs) = myReverse xs ++ [x]   -- Rekurencyjnie odwracamy ogon listy, a następnie dopisujemy głowę na koniec
+
+
+
+zad.4
+multiplicationTable :: [(Int, Int, Int)]
+multiplicationTable = [ (a, b, a * b) | a <- [1..12], b <- [1..12] ]
+
+
+
+zad.5
+-- Lista dostępnych kolorów
+colors :: [String]
+colors = ["black", "white", "blue", "yellow", "red"]
+
+-- Funkcja generująca unikalne pary kolorów bez powtórzeń i bez par identycznych kolorów
+colorPairs :: [(String, String)]
+colorPairs = 
+  [ (c1, c2)                                    -- Tworzymy krotkę z dwóch kolorów c1 i c2
+  | (i, c1) <- indexedColors                    -- Iterujemy po kolorach wraz z ich indeksami (i, c1)
+  , (j, c2) <- indexedColors                    -- Iterujemy po kolorach wraz z indeksami (j, c2)
+  , i < j                                       -- Bierzemy tylko pary, gdzie indeks i jest mniejszy od j
+                                                -- dzięki temu:
+                                                -- 1) eliminujemy pary z tym samym kolorem (bo wtedy i == j)
+                                                -- 2) eliminujemy duplikaty typu (red,yellow) i (yellow,red),
+                                                --    bo zachowujemy tylko tę wersję, gdzie i < j
+  ]
+  where
+    -- Tworzymy listę par (indeks, kolor) dla łatwego porównania i filtrowania
+    indexedColors = zip [1..] colors
+
+
+
+
+zad.6
+append :: [a] -> [a] -> [a]
+append [] m = m                   -- jeśli pierwsza lista pusta, wynik to druga lista
+append (x:xs) m = x : append xs m -- w przeciwnym razie dodajemy głowę x i rekurencyjnie łączymy ogon xs z m
+
+member :: Eq a => a -> [a] -> Bool
+member _ [] = False               -- jeśli lista pusta, element nie należy do listy
+member x (y:ys) 
+  | x == y    = True             -- jeśli pierwszy element to x, zwracamy True
+  | otherwise = member x ys      -- w przeciwnym wypadku sprawdzamy dalej ogon listy
+
+last :: [a] -> a
+last [] = error "Lista pusta"    -- dla pustej listy zwracamy błąd
+last [x] = x                     -- jeśli lista ma jeden element, to on jest ostatni
+last (_:xs) = last xs            -- inaczej idziemy rekurencyjnie do końca listy
+
+delete :: Eq a => a -> [a] -> [a]
+delete _ [] = []                 -- pustej listy nic nie usuwamy
+delete x (y:ys)
+  | x == y    = ys              -- jeśli znaleźliśmy x, pomijamy go i zwracamy ogon listy
+  | otherwise = y : delete x ys -- inaczej zachowujemy y i usuwamy x z ogona
+
+split :: Ord a => a -> [a] -> ([a], [a])
+split _ [] = ([], [])            -- pustą listę dzielimy na dwie puste listy
+split x (y:ys)
+  | y < x     = (y:ls, gs)      -- jeśli y < x, dodajemy y do listy mniejszych
+  | y > x     = (ls, y:gs)      -- jeśli y > x, dodajemy y do listy większych
+  | otherwise = (ls, gs)        -- jeśli y == x, nie dodajemy go do żadnej listy
+  where (ls, gs) = split x ys   -- rekurencyjnie dzielimy ogon listy
+
+
+
+
+zad.7
+filter :: (a -> Bool) -> [a] -> [a]
+filter _ [] = []                           -- jeśli lista pusta, wynik też pusty
+filter p (x:xs)
+  | p x       = x : filter p xs           -- jeśli x spełnia predykat p, dodajemy go do wyniku
+  | otherwise = filter p xs                -- w przeciwnym razie pomijamy x i sprawdzamy resztę
+
+
+
+
+
+zad.8
+onlyEven :: [Int] -> [Int]
+onlyEven [] = []                             -- dla pustej listy zwracamy pustą listę
+onlyEven (x:xs)
+  | even x    = x : onlyEven xs             -- jeśli x jest parzyste, dodajemy je do wyniku
+  | otherwise = onlyEven xs                  -- jeśli nie, pomijamy i sprawdzamy dalej
+
+
+
+
+zad.9
+doubleAll :: [Int] -> [Int]
+doubleAll [] = []                         -- pustej listy nie ma co podwajać, więc zwracamy pustą listę
+doubleAll (x:xs) = (2 * x) : doubleAll xs  -- podwajamy pierwszy element i rekurencyjnie resztę listy
+
+
+
+zad.10
+sumOfDigits :: Integer -> Integer
+sumOfDigits n
+  | n < 0     = sumOfDigits (-n)               -- jeśli liczba jest ujemna, zamieniamy na dodatnią
+  | n < 10    = n                               -- jeśli pojedyncza cyfra, to zwracamy ją
+  | otherwise = (n `mod` 10) + sumOfDigits (n `div` 10)  -- sumujemy ostatnią cyfrę i resztę cyfr
